@@ -665,3 +665,15 @@
 .aurora-cursor {
   z-index: 99999;
 }
+.hero-socials a {
+  border: 1px solid var(--muted);
+  padding: 7px 10px;
+  border-radius: 4px;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.hero-socials a:hover {
+  border-color: var(--blue);
+  color: var(--blue);
+}
