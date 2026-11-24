@@ -1,5 +1,59 @@
 "use client";
-import { useState } from "react";
+
+import { useState, useEffect } from "react";
+
+
+function AuroraCursor() {
+  const [pos, setPos] = useState({ x: -100, y: -100 });
+  const [trail, setTrail] = useState([
+    { x: -100, y: -100 },
+    { x: -100, y: -100 },
+    { x: -100, y: -100 },
+    { x: -100, y: -100 },
+  ]);
+
+  useEffect(() => {
+    let frame = 0;
+
+    const move = (e: MouseEvent) => {
+      const next = { x: e.clientX, y: e.clientY };
+      setPos(next);
+
+      setTrail((old) => [next, ...old.slice(0, 3)]);
+    };
+
+    window.addEventListener("mousemove", move);
+    return () => {
+      window.removeEventListener("mousemove", move);
+      cancelAnimationFrame(frame);
+    };
+  }, []);
+
+  return (
+    <>
+      {trail.map((point, index) => (
+        <div
+          key={index}
+          className={`aurora-trail trail-${index}`}
+          style={{
+            left: point.x,
+            top: point.y,
+          }}
+        />
+      ))}
+
+      <div
+        className="aurora-cursor"
+        style={{
+          left: pos.x,
+          top: pos.y,
+        }}
+      >
+        <span className="aurora-cursor-dot" />
+      </div>
+    </>
+  );
+}
 
 type Skill = {
   name: string;
@@ -13,16 +67,16 @@ const skills: Skill[] = [
   { name: "HTML", logo: "https://cdn.simpleicons.org/html5/E34F26", group: "WEB" },
   { name: "JavaScript", logo: "https://cdn.simpleicons.org/javascript/F7DF1E", group: "WEB" },
   { name: "React", logo: "https://cdn.simpleicons.org/react/61DAFB", group: "WEB" },
-  { name: "Next.js", logo: "https://cdn.simpleicons.org/nextdotjs/FFFFFF", group: "WEB" },
-
-  { name: "C", logo: "https://cdn.simpleicons.org/c/A8B9CC", group: "CODE" },
+  { name: "Next.js", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nextjs/nextjs-original.svg", group: "WEB" },
+{  name: "Tailwind CSS",logo: "https://cdn.simpleicons.org/tailwindcss/06B6D4", group: "WEB"},
+  { name: "C", logo: "https://cdn.simpleicons.org/c/659AD2",group: "CODE" },
   { name: "C++", logo: "https://cdn.simpleicons.org/cplusplus/00599C", group: "CODE" },
   { name: "Python", logo: "https://cdn.simpleicons.org/python/3776AB", group: "CODE" },
 
   { name: "VS Code", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/vscode/vscode-original.svg", group: "TOOLS" },
-  { name: "Vercel", logo: "https://cdn.simpleicons.org/vercel/FFFFFF", group: "TOOLS" },
+  { name: "Vercel", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/vercel/vercel-original.svg", group: "TOOLS" },
   { name: "Git", logo: "https://cdn.simpleicons.org/git/F05032", group: "TOOLS" },
-  { name: "GitHub", logo: "https://cdn.simpleicons.org/github/FFFFFF", group: "TOOLS" },
+  { name: "GitHub", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg", group: "TOOLS" },
 
   { name: "Video Editing", symbol: "▶", group: "CREATIVE" },
   { name: "Photo Editing", symbol: "✦", group: "CREATIVE" },
@@ -72,7 +126,10 @@ const toggleMenu = () => {
   };
 
   return (
+    <>
+    <AuroraCursor />
     <main className={`site ${dark?"dark":"light"}`} id="top">
+      
       <div className="ambient ambient-one"/><div className="ambient ambient-two"/><div className="ambient ambient-three"/>
       <nav className="nav">
         <a href="#top" className="brand" onClick={()=>setMenuOpen(false)}><span className="brand-avatar">EJ</span><b>EKANSH JINDAL</b><span className="brand-chevron"></span></a>
@@ -94,13 +151,42 @@ const toggleMenu = () => {
 
       <section className="hero" id="home">
         <div className="hero-topline"><span>PORTFOLIO / 2026</span><span>COMPUTER SCIENCE · INDIA</span></div>
-        <div className="hero-copy">
-          <span className="eyebrow"><i/> B.TECH CSE STUDENT · CREATIVE BUILDER</span>
-          <h1>IDEAS INTO<br/><span className="outline">DIGITAL</span> <span className="accent">REALITY.</span></h1>
-          <p>Hey, I&apos;m <strong>Ekansh Jindal</strong> — a Computer Science Engineering student exploring technology, creative work and meaningful digital experiences.</p>
-          <div className="hero-actions"><a className="primary-button" href="#projects">Explore my work ↗</a><a className="text-link" href="#contact">Let&apos;s connect ↗</a></div>
-          <div className="hero-meta"><span><b>01</b> STUDENT DEVELOPER</span><span><b>02</b> TECH + CREATIVITY</span></div>
-        </div>
+   
+<div className="hero-copy hero-centered">
+  <span className="eyebrow">
+    <i /> B.TECH CSE STUDENT · CREATIVE BUILDER
+  </span>
+
+  <h1 className="intro-title">
+    HEY, I'M
+    <br />
+    <span className="name-highlight">EKANSH JINDAL.</span>
+  </h1>
+
+  <h2 className="hero-tagline">
+    IDEAS INTO <span>DIGITAL REALITY.</span>
+  </h2>
+
+  <p>
+    A Computer Science Engineering student exploring technology,
+    creative work and meaningful digital experiences.
+  </p>
+
+  <div className="hero-actions">
+    <a className="primary-button" href="#projects">
+      Explore my work ↗
+    </a>
+    <a className="text-link" href="#contact">
+      Let's connect ↗
+    </a>
+  </div>
+
+  <div className="hero-meta">
+    <span><b>01</b> STUDENT DEVELOPER</span>
+    <span><b>02</b> TECH + CREATIVITY</span>
+  </div>
+</div>
+
         <div className="hero-visual">
           <div className="orbit orbit-one"/><div className="orbit orbit-two"/>
           <div className="photo-card">
@@ -148,9 +234,9 @@ const toggleMenu = () => {
       <section className="section" id="education">
         <div className="section-heading centered"><span className="kicker">03 / THE FOUNDATION</span><h2>My <em>Education.</em></h2><p>The academic journey behind my work.</p></div>
         <div className="education-list">
-          <article className="panel education-card"><div className="education-icon">⌂</div><div><span className="kicker">CURRENTLY PURSUING</span><h3>B.Tech Computer Science &amp; Engineering</h3><p>Giani Zail Singh Campus College of Engineering and Technology</p><p>Maharaja Ranjit Singh Punjab Technical University (MRSPTU), Bathinda</p></div><span className="year-pill">B.TECH</span></article>
-          <article className="panel education-card"><div className="education-icon">12</div><div><span className="kicker">SENIOR SECONDARY</span><h3>Class 12th</h3><p>Kids Kingdom Convent School</p><p>Percentage: <strong>80%</strong></p></div><span className="year-pill">80%</span></article>
-          <article className="panel education-card"><div className="education-icon">10</div><div><span className="kicker">SECONDARY</span><h3>Class 10th</h3><p>Kids Kingdom Convent School</p><p>Percentage: <strong>80%</strong></p></div><span className="year-pill">80%</span></article>
+          <article className="panel education-card"><div className="education-icon">⌂</div><div><span className="kicker">CURRENTLY PURSUING</span><h3>B.Tech Computer Science &amp; Engineering</h3><p>Giani Zail Singh Campus College of Engineering and Technology</p><p>Maharaja Ranjit Singh Punjab Technical University (MRSPTU), Bathinda</p></div><span className="year-pill">2025-2029</span></article>
+          <article className="panel education-card"><div className="education-icon">12</div><div><span className="kicker">SENIOR SECONDARY</span><h3>Class 12th</h3><p>Kids Kingdom Convent School</p><p>Percentage: <strong>80%</strong></p></div><span className="year-pill">2024-2025</span></article>
+          <article className="panel education-card"><div className="education-icon">10</div><div><span className="kicker">SECONDARY</span><h3>Class 10th</h3><p>Kids Kingdom Convent School</p><p>Percentage: <strong>80%</strong></p></div><span className="year-pill">2023-2024</span></article>
         </div>
       </section>
 
@@ -178,5 +264,5 @@ const toggleMenu = () => {
       <section className="section contact-section" id="contact"><div className="panel contact-card"><span className="kicker">07 / GET IN TOUCH</span><h2>Have an idea?<br/><em>Let&apos;s connect.</em></h2><p>Open to learning, collaboration and conversations around technology and creative projects.</p><span className="contact-location">Bathinda, Punjab, India</span><div className="contact-socials"><a href="https://linkedin.com/in/ekanshjindal1" target="_blank" rel="noreferrer">LinkedIn ↗</a><a href="https://github.com/bhaveshbansal01/SIH-HACKATHON-2K26-THE-WISERZ" target="_blank" rel="noreferrer">GitHub ↗</a></div><a className="primary-button" href="https://linkedin.com/in/ekanshjindal1" target="_blank" rel="noreferrer">Connect with me ↗</a></div></section>
       <footer className="footer"><a href="#top" className="brand"><span className="brand-avatar">EJ</span><b>Ekansh Jindal</b></a><span>© 2026 EKANSH JINDAL · STUDENT PORTFOLIO</span><a href="#top">BACK TO TOP ↑</a></footer>
     </main>
-  );
-}
+  </>
+);} 
